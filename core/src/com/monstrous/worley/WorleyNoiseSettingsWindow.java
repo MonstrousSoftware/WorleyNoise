@@ -23,9 +23,6 @@ public class WorleyNoiseSettingsWindow extends Window {
     }
 
 
-    private void refresh() {
-        client.regenerateNoise();
-    }
 
     private void addActors() {
         Table table = new Table();
@@ -38,7 +35,7 @@ public class WorleyNoiseSettingsWindow extends Window {
             public void changed(ChangeEvent event, Actor actor) {
                 noiseSettings.numPoints = (int)sliderNumPoints.getValue();
                 labelNumPointsValue.setText(String.valueOf(noiseSettings.numPoints));
-                refresh();
+                client.regenerateNoise();
             }
         });
         final Label labelNumPoints = new Label("NumPoints", skin);
@@ -54,29 +51,11 @@ public class WorleyNoiseSettingsWindow extends Window {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 noiseSettings.invert = checkboxInvert.isChecked();
-                refresh();
+                client.updateNoise();
             }
         });
 
         table.add(checkboxInvert);
-        table.row();
-
-        final Slider sliderDistanceN = new Slider(0, 5f, 1f, false, skin);
-        sliderDistanceN.setValue(noiseSettings.distanceN);
-        final Label labelDistanceNValue = new Label(String.valueOf(noiseSettings.distanceN), skin);
-        sliderDistanceN.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                noiseSettings.distanceN = (int) sliderDistanceN.getValue();
-                labelDistanceNValue.setText(String.valueOf(noiseSettings.distanceN));
-                refresh();
-            }
-        });
-        final Label labelDistanceN = new Label("Distance N", skin);
-
-        table.add(labelDistanceN);
-        table.add(sliderDistanceN);
-        table.add(labelDistanceNValue);
         table.row();
 
         final Slider sliderDistanceScale = new Slider(0, 1f, 0.02f, false, skin);
@@ -87,7 +66,7 @@ public class WorleyNoiseSettingsWindow extends Window {
             public void changed(ChangeEvent event, Actor actor) {
                 noiseSettings.distanceScale = sliderDistanceScale.getValue();
                 labelDistanceScaleValue.setText(String.format("%.2f", noiseSettings.distanceScale));
-                refresh();
+                client.updateNoise();
             }
         });
 

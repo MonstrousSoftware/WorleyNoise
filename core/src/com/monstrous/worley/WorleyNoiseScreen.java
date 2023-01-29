@@ -13,20 +13,21 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
 
 
-    private static int noiseResolution = 600;
-
     private SpriteBatch batch;
     private Texture texture;
+    private Pixmap pixmap;
     private Skin skin;
     private Stage stage;
     private int screenWidth, screenHeight;
+    private WorleyNoise worley = new WorleyNoise();
     private WorleyNoiseSettings settings;
 
 
     @Override
     public void show() {
         settings = new WorleyNoiseSettings();
-        settings.numPoints = 20;
+        settings.numPoints = 10;
+        settings.depth = 1000;
         settings.distanceScale = 0.3f;
 
         // GUI elements via Stage class
@@ -40,28 +41,37 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
         //refresh();
         Gdx.input.setInputProcessor(stage);
 
-        texture = makeNoiseTexture(noiseResolution, settings);
+
     }
 
     @Override
     public void resize(int width, int height) {
         this.screenWidth = width;
         this.screenHeight = height;
+
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+
         stage.getViewport().update(width, height, true);
+        texture = makeNoiseTexture(screenHeight, settings);
         super.resize(width, height);
     }
 
     @Override
     public void render(float deltaTime) {
+
+        texture = updateNoiseTexture(screenHeight, settings);
+
         // clear screen
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         batch.begin();
+
         // show texture at right of screen
         int w = texture.getWidth();
         int h = texture.getHeight();
-        batch.draw(texture, (screenWidth - w), (screenHeight - h) / 2, w, h);
+        batch.draw(texture, (screenWidth - w), 0, w, h);
+
 
         batch.end();
 
@@ -71,13 +81,24 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
 
 
     private Texture makeNoiseTexture(int size, WorleyNoiseSettings settings) {
-        WorleyNoise worley = new WorleyNoise();
+
+        worley.placeRandomPoints(size, size, settings);
 
         // generate a noise map
         float[][] map = worley.generateMap(size, size, settings);
 
-        // copy to a texture (for debug)
-        Pixmap pixmap = generatePixmap(map, size);
+        // copy to a texture
+        pixmap = generatePixmap(map, size);
+        return new Texture(pixmap);
+    }
+
+    private Texture updateNoiseTexture(int size, WorleyNoiseSettings settings) {
+
+        settings.z = (settings.z+1) % settings.depth;
+
+        worley.updatePixmap(pixmap, size, settings);
+
+        texture.dispose();
         return new Texture(pixmap);
     }
 
@@ -108,6 +129,11 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
 
     @Override
     public void regenerateNoise() {
-        texture = makeNoiseTexture(noiseResolution, settings);
+        texture = makeNoiseTexture(screenHeight, settings);
+    }
+
+    @Override
+    public void updateNoise() {
+        texture = updateNoiseTexture(screenHeight, settings);
     }
 }

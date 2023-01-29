@@ -2,14 +2,16 @@ package com.monstrous.worley;
 
 public class WorleyNoiseSettings {
     int numPoints;
+    int depth;
     float distanceScale;
-    int distanceN;  // 0 for closest point, 1 for second closest, etc.
     boolean invert;
+    int z;              // z value
 
     public WorleyNoiseSettings() {
         numPoints = 20;
+        depth = 400;
         distanceScale = .5f;    // as a fraction of width
-        distanceN = 0;
         invert = true;
+        z = 0;
     }
 }

@@ -6,4 +6,6 @@ package com.monstrous.worley;
 public interface NoiseAdapter {
 
     public void regenerateNoise();
+
+    public void updateNoise();
 }
