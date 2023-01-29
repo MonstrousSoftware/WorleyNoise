@@ -26,9 +26,9 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
     @Override
     public void show() {
         settings = new WorleyNoiseSettings();
-        settings.numPoints = 10;
+        settings.cellSize = 50;
         settings.depth = 1000;
-        settings.distanceScale = 0.3f;
+        settings.distanceScale = 0.1f;
 
         // GUI elements via Stage class
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
@@ -38,10 +38,7 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
 
         batch = new SpriteBatch();
 
-        //refresh();
         Gdx.input.setInputProcessor(stage);
-
-
     }
 
     @Override
@@ -83,12 +80,9 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
     private Texture makeNoiseTexture(int size, WorleyNoiseSettings settings) {
 
         worley.placeRandomPoints(size, size, settings);
-
-        // generate a noise map
-        float[][] map = worley.generateMap(size, size, settings);
-
+        pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        worley.updatePixmap(pixmap, size, settings);
         // copy to a texture
-        pixmap = generatePixmap(map, size);
         return new Texture(pixmap);
     }
 
@@ -98,31 +92,15 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
 
         worley.updatePixmap(pixmap, size, settings);
 
+
         texture.dispose();
         return new Texture(pixmap);
-    }
-
-    // from tests/g3d/voxel/PerlinNoiseGenerator.java
-    public Pixmap generatePixmap (float [][] map, int size) {
-
-        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
-        int idx = 0;
-        for(int y = 0; y < size; y++) {
-            for(int x = 0; x < size; x++) {
-                byte val = (byte) (map[x][y] * 255f);
-
-                pixmap.getPixels().put(idx++, val);
-                pixmap.getPixels().put(idx++, (byte)0);
-                pixmap.getPixels().put(idx++, val);
-                pixmap.getPixels().put(idx++, (byte) 255);
-            }
-        }
-        return pixmap;
     }
 
     @Override
     public void dispose() {
         batch.dispose();
+        pixmap.dispose();
         texture.dispose();
         super.dispose();
     }

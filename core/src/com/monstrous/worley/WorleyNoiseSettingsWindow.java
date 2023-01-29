@@ -27,22 +27,21 @@ public class WorleyNoiseSettingsWindow extends Window {
     private void addActors() {
         Table table = new Table();
 
-        final Slider sliderNumPoints = new Slider(1, 100f, 1f, false, skin);
-        sliderNumPoints.setValue(noiseSettings.numPoints);
-        final Label labelNumPointsValue = new Label(String.valueOf(noiseSettings.numPoints), skin);
-        sliderNumPoints.addListener(new ChangeListener() {
+        final Slider sliderCellSize = new Slider(1, 100f, 2f, false, skin);
+        sliderCellSize.setValue(noiseSettings.cellSize);
+        final Label labelCellSizeValue = new Label(String.valueOf(noiseSettings.cellSize), skin);
+        sliderCellSize.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                noiseSettings.numPoints = (int)sliderNumPoints.getValue();
-                labelNumPointsValue.setText(String.valueOf(noiseSettings.numPoints));
+                noiseSettings.cellSize = sliderCellSize.getValue();
+                labelCellSizeValue.setText(String.valueOf(noiseSettings.cellSize));
                 client.regenerateNoise();
             }
         });
-        final Label labelNumPoints = new Label("NumPoints", skin);
 
-        table.add(labelNumPoints);
-        table.add(sliderNumPoints);
-        table.add(labelNumPointsValue);
+        table.add(new Label("CellSize", skin));
+        table.add(sliderCellSize);
+        table.add(labelCellSizeValue);
         table.row();
 
         final CheckBox checkboxInvert = new CheckBox("invert", skin);
