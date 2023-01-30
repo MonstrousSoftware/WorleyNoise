@@ -46,7 +46,6 @@ public class WorleyNoise {
                 int iy = (int) (y/settings.cellSize);
                 int iz = (int) (z/settings.cellSize);
 
-
                 float closest = Float.MAX_VALUE;
                 for(int dx = -1; dx <= 1; dx++){
                     for(int dy = -1; dy <= 1; dy++){
@@ -59,14 +58,16 @@ public class WorleyNoise {
                                 continue;
 
                             Vector3 point = pointMap[ix+dx][iy+dy][iz+dz];
-                            float dist = point.dst(x,y,z);
+                            float dist = point.dst2(x,y,z);
+                            //float dist = Math.abs(x-point.x)+Math.abs(y-point.y)+Math.abs(z-point.z); // alternative: Manhattan distance
                             if(dist < closest)
                                 closest = dist;
                         }
                     }
                 }
 
-                float noise =  Math.min(closest/ (settings.distanceScale*(float)size), 1f);
+                closest = (float)Math.sqrt(closest);
+                float noise =  Math.min(closest/ (settings.distanceScale*(float)settings.cellSize), 1f);
                 if(settings.invert)
                     noise = 1f - noise;
                 // noise is a float in the range [0-1]

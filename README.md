@@ -11,7 +11,7 @@ at the second closest, or third closest feature point).
 
 The slider settings allows to set the size of the cubes (i.e. to change the number of feature points).
 The checkbox simply inverts the colours.
-The last slider determines the scaling from a pixel's distance to the closest feature point to a shade of grey.
+The last slider determines the mapping from a pixel's distance to the closest feature point to a shade of grey (as factor of the cube size).
 
 
 ![WorleyScreenShot](https://user-images.githubusercontent.com/49096535/215554414-c4528954-f706-4604-847f-e5f06f45af2c.png)

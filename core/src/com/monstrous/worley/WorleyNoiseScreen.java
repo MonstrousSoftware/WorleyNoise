@@ -26,7 +26,7 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
         settings = new WorleyNoiseSettings();
         settings.cellSize = 50;
         settings.depth = 1000;
-        settings.distanceScale = 0.1f;
+        settings.distanceScale = 1.0f;
 
         // GUI elements via Stage class
         Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));

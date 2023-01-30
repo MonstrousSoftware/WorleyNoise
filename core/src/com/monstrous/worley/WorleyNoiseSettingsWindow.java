@@ -57,7 +57,7 @@ public class WorleyNoiseSettingsWindow extends Window {
         table.add(checkboxInvert);
         table.row();
 
-        final Slider sliderDistanceScale = new Slider(0, 1f, 0.02f, false, skin);
+        final Slider sliderDistanceScale = new Slider(0, 2f, 0.01f, false, skin);
         sliderDistanceScale.setValue(noiseSettings.distanceScale);
         final Label labelDistanceScaleValue = new Label(String.valueOf(noiseSettings.distanceScale), skin);
         sliderDistanceScale.addListener(new ChangeListener() {
