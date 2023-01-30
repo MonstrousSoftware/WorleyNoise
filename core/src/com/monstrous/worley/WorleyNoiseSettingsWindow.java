@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class WorleyNoiseSettingsWindow extends Window {
 
-    private Skin skin;
-    private WorleyNoiseSettings noiseSettings;
-    private NoiseAdapter client;
+    private final Skin skin;
+    private final WorleyNoiseSettings noiseSettings;
+    private final NoiseAdapter client;
 
 
     public WorleyNoiseSettingsWindow(WorleyNoiseSettings noiseSettings, NoiseAdapter client, String title, Skin skin) {

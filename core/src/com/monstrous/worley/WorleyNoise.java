@@ -1,10 +1,7 @@
 package com.monstrous.worley;
 
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.math.GridPoint3;
 import com.badlogic.gdx.math.Vector3;
-
-import java.util.ArrayList;
 
 
 // generates Worley noise in 3 dimensions.

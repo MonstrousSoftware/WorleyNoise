@@ -5,7 +5,7 @@ package com.monstrous.worley;
 // used for callback in noise settings window
 public interface NoiseAdapter {
 
-    public void regenerateNoise();
+    void regenerateNoise();
 
-    public void updateNoise();
+    void updateNoise();
 }

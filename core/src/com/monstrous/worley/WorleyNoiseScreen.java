@@ -15,11 +15,9 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
 
     private SpriteBatch batch;
     private Texture texture;
-    private Pixmap pixmap;
-    private Skin skin;
     private Stage stage;
     private int screenWidth, screenHeight;
-    private WorleyNoise worley = new WorleyNoise();
+    private final WorleyNoise worley = new WorleyNoise();
     private WorleyNoiseSettings settings;
 
 
@@ -31,7 +29,7 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
         settings.distanceScale = 0.1f;
 
         // GUI elements via Stage class
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         stage = new Stage(new ScreenViewport());
         WorleyNoiseSettingsWindow noiseSettingsWindow = new WorleyNoiseSettingsWindow(settings, this, "Noise", skin);
         stage.addActor(noiseSettingsWindow);
@@ -80,7 +78,7 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
     private Texture makeNoiseTexture(int size, WorleyNoiseSettings settings) {
 
         worley.placeRandomPoints(size, size, settings);
-        pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
         worley.updatePixmap(pixmap, size, settings);
         // copy to a texture
         return new Texture(pixmap);
@@ -90,17 +88,21 @@ public class WorleyNoiseScreen  extends ScreenAdapter implements NoiseAdapter {
 
         settings.z = (settings.z+1) % settings.depth;
 
-        worley.updatePixmap(pixmap, size, settings);
 
+        if (!texture.getTextureData().isPrepared()) {
+            texture.getTextureData().prepare();
+        }
+        Pixmap pm = texture.getTextureData().consumePixmap();
 
-        texture.dispose();
-        return new Texture(pixmap);
+        worley.updatePixmap(pm, size, settings);    // update for new Z and other settings that may have changed
+
+        texture.draw(pm, 0,0);
+        return texture;
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        pixmap.dispose();
         texture.dispose();
         super.dispose();
     }
